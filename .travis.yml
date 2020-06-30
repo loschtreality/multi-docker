@@ -1,0 +1,24 @@
+language: generic
+sudo: required
+
+services:
+    - docker
+
+before_install:
+    - docker build -t loschtreality/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run -e CI=true loschtreality/react-test npm test
+
+after_success:
+    - docker build -t loschtreality/multi-client ./client
+    - docker build -t loschtreality/multi-nginx ./nginx
+    - docker build -t loschtreality/multi-worker ./worker
+    - docker build -t loschtreality/multi-server ./server
+    # Log into docker
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    # Push to docker hub
+    - docker push loschtreality/multi-client
+    - docker push loschtreality/multi-nginx
+    - docker push loschtreality/multi-worker
+    - docker push loschtreality/multi-server
