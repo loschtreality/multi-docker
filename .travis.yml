@@ -5,20 +5,20 @@ services:
     - docker
 
 before_install:
-    - docker build -t loschtreality/react-test -f ./client/Dockerfile.dev ./client
+    - docker build -t mlosch/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-    - docker run -e CI=true loschtreality/react-test npm test
+    - docker run -e CI=true mlosch/react-test npm test
 
 after_success:
-    - docker build -t loschtreality/multi-client ./client
-    - docker build -t loschtreality/multi-nginx ./nginx
-    - docker build -t loschtreality/multi-worker ./worker
-    - docker build -t loschtreality/multi-server ./server
+    - docker build -t mlosch/multi-client ./client
+    - docker build -t mlosch/multi-nginx ./nginx
+    - docker build -t mlosch/multi-worker ./worker
+    - docker build -t mlosch/multi-server ./server
     # Log into docker
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
     # Push to docker hub
-    - docker push loschtreality/multi-client
-    - docker push loschtreality/multi-nginx
-    - docker push loschtreality/multi-worker
-    - docker push loschtreality/multi-server
+    - docker push mlosch/multi-client
+    - docker push mlosch/multi-nginx
+    - docker push mlosch/multi-worker
+    - docker push mlosch/multi-server
